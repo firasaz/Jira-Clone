@@ -2,17 +2,19 @@ import { cn } from "@/lib/utils";
 
 interface DottedSeparator {
   className?: string;
-  orientation?: string;
-  height?: string;
+  orientation?: "horizontal" | "vertical";
   color?: string;
+  height?: string;
   dotSize?: string;
+  gapSize?: string;
 }
-const DottedSeparator = ({
+export const DottedSeparator = ({
   className,
   orientation = "horizontal",
-  height,
-  color,
-  dotSize = "2",
+  color = "#d4d4d8",
+  height = "2px",
+  dotSize = "2px",
+  gapSize = "2px",
 }: DottedSeparator) => {
   const isHorizontal = orientation === "horizontal";
   return (
@@ -20,16 +22,23 @@ const DottedSeparator = ({
       className={cn(
         isHorizontal
           ? "w-full flex items-center"
-          : "h-full flex flex-col items-center"
+          : "h-full flex flex-col items-center",
+        className
       )}
-      style={{
-        width: isHorizontal ? "100%" : height,
-        height: isHorizontal ? height : "100%",
-        backgroundImage: `radial-gradient(circle, ${color} 25%, transparent 25%)`,
-        backgroundSize: isHorizontal
-          ? `${parseInt(dotSize) + parseInt(dotSize)}px ${height}`
-          : `${height} ${parseInt(dotSize) + parseInt(dotSize)}`,
-      }}
-    ></div>
+    >
+      <div
+        className={isHorizontal ? "flex-grow" : "flex-grow-0"}
+        style={{
+          width: isHorizontal ? "100%" : height,
+          height: isHorizontal ? height : "100%",
+          backgroundImage: `radial-gradient(circle, ${color} 25%, transparent 25%)`,
+          backgroundSize: isHorizontal
+            ? `${parseInt(dotSize) + parseInt(gapSize)}px ${height}`
+            : `${height} ${parseInt(dotSize) + parseInt(gapSize)}px`,
+          backgroundRepeat: isHorizontal ? "repeat-x" : "repeat-y",
+          backgroundPosition: "center",
+        }}
+      />
+    </div>
   );
 };
