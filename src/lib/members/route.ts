@@ -37,6 +37,7 @@ const app = new Hono()
             ...member,
             name: user.name,
             email: user.email,
+            role: member.role,
           };
         })
       );
@@ -88,7 +89,7 @@ const app = new Hono()
   .patch(
     "/:memberId",
     sessionMiddleware,
-    zValidator("json", z.object({ role: z.enum(["ADMIN", "MEMBERS"]) })),
+    zValidator("json", z.object({ role: z.enum(["ADMIN", "MEMBER"]) })),
     async c => {
       const { memberId } = c.req.param();
       const { role } = c.req.valid("json");
