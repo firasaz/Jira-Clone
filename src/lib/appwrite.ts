@@ -57,7 +57,8 @@ export const createAdminClient = async () => {
     .setKey(process.env.NEXT_APPWRITE_KEY!);
 
   const account = new Account(client);
-  return { account };
+  const users = new Users(client);
+  return { account, users };
   // return {
   //   get account() {
   //     return new Account(client);
