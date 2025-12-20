@@ -80,10 +80,8 @@ export const UpdateWorkspaceForm = ({
     mutate(
       { form: finalValues, param: { workspaceId: initialValues.$id } },
       {
-        onSuccess: ({ data }) => {
+        onSuccess: () => {
           form.reset();
-          router.push(`/workspaces/${data.$id}`);
-          // onCancel?.(); // add a null check as the onCancel is optional in the interface
         },
       }
     );
@@ -113,19 +111,15 @@ export const UpdateWorkspaceForm = ({
     const ok = await confirmReset();
     if (!ok) return;
 
-    resetInviteCode(
-      {
-        param: { workspaceId: initialValues.$id },
-      },
-      {
-        onSuccess: () => {
-          router.refresh(); // refetch server components to update the UI for the invite code after reseting
-        },
-      }
-    );
+    resetInviteCode({
+      param: { workspaceId: initialValues.$id },
+    });
   };
 
-  const fullInviteLink = `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`;
+  const fullInviteLink =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`
+      : "";
   const handleCopyInvite = () => {
     navigator.clipboard
       .writeText(fullInviteLink)
