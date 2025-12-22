@@ -1,8 +1,11 @@
+import { Loader } from "lucide-react";
+
 import { useGetMembers } from "@/hooks/members/use-get-members";
 import { useGetProjects } from "@/hooks/projects/use-get-projects";
 import { useWorkspaceId } from "@/hooks/workspaces/use-workspace-id";
-import { Card, CardContent } from "../ui/card";
-import { Loader } from "lucide-react";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { CreateTaskForm } from "@/components/tasks/create-task-form";
 
 interface CreateTaskFormWrapperProps {
   onCancel: () => void;
@@ -41,9 +44,12 @@ export const CreateTaskFormWrapper = ({
       </Card>
     );
   return (
-    <div className="w-full h-[714px]">
-      {JSON.stringify(projectOptions)}
-      {JSON.stringify(memberOptions)}
+    <div className="w-full">
+      <CreateTaskForm
+        onCancel={onCancel}
+        projectOptions={projectOptions ?? []}
+        memberOptions={memberOptions ?? []}
+      />
     </div>
   );
 };
