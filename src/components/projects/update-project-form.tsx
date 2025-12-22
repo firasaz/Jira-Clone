@@ -9,16 +9,13 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
+import { ArrowLeftIcon, ImageIcon } from "lucide-react";
 
-import { toast } from "sonner";
+import { Project } from "@/lib/projects/types";
+import { updateProjectSchema } from "@/lib/projects/schema";
 
-import { Workspace } from "@/lib/workspaces/types";
-import { updateWorkspaceSchema } from "@/lib/workspaces/schemas";
-
-import { useUpdateWorkspace } from "@/hooks/workspaces/use-update-workspace";
-import { useDeleteWorkspace } from "@/hooks/workspaces/use-delete-workspace";
-import { useResetInviteCode } from "@/hooks/workspaces/use-reset-invite-code";
+import { useUpdateProject } from "@/hooks/projects/use-update-project";
+import { useDeleteProject } from "@/hooks/projects/use-delete-project";
 
 import { useConfirm } from "@/hooks/workspaces/use-confirm";
 
@@ -36,49 +33,42 @@ import { Button } from "@/components/ui/button";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-interface UpdateWorkspaceFormProps {
+interface UpdateProjectFormProps {
   onCancel?: () => void;
-  initialValues: Workspace;
+  initialValues: Project;
 }
 
-export const UpdateWorkspaceForm = ({
+export const UpdateProjectForm = ({
   onCancel,
   initialValues,
-}: UpdateWorkspaceFormProps) => {
+}: UpdateProjectFormProps) => {
   const router = useRouter();
 
-  const { mutate, isPending } = useUpdateWorkspace();
-  const { mutate: deleteWorkspace, isPending: isDeletingWorkspace } =
-    useDeleteWorkspace();
-  const { mutate: resetInviteCode, isPending: isResetingInviteCode } =
-    useResetInviteCode();
+  const { mutate, isPending } = useUpdateProject();
+  const { mutate: deleteProject, isPending: isDeletingProject } =
+    useDeleteProject();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [DeleteDialog, confirmDelete] = useConfirm(
-    "Delete Workspace",
+    "Delete Project",
     "This action cannot be undone.",
     "destructive"
   );
-  const [ResetDialog, confirmReset] = useConfirm(
-    "Reset invite code",
-    "This will invalidate the invite link",
-    "destructive"
-  );
 
-  const form = useForm<z.infer<typeof updateWorkspaceSchema>>({
-    resolver: zodResolver(updateWorkspaceSchema),
+  const form = useForm<z.infer<typeof updateProjectSchema>>({
+    resolver: zodResolver(updateProjectSchema),
     defaultValues: {
       ...initialValues,
       image: initialValues.imageUrl ?? "",
     },
   });
-  const onSubmit = (values: z.infer<typeof updateWorkspaceSchema>) => {
+  const onSubmit = (values: z.infer<typeof updateProjectSchema>) => {
     const finalValues = {
       ...values,
       image: values.image instanceof File ? values.image : "",
     };
     mutate(
-      { form: finalValues, param: { workspaceId: initialValues.$id } },
+      { form: finalValues, param: { projectId: initialValues.$id } },
       {
         onSuccess: () => {
           form.reset();
@@ -96,40 +86,22 @@ export const UpdateWorkspaceForm = ({
     const ok = await confirmDelete();
     if (!ok) return;
 
-    deleteWorkspace(
+    deleteProject(
       {
-        param: { workspaceId: initialValues.$id },
+        param: { projectId: initialValues.$id },
       },
       {
         onSuccess: () => {
-          router.push("/");
+          // window.location.href = "/";
+          router.push(`/workspaces/${initialValues.workspaceId}`);
         },
       }
     );
-  };
-  const handleReset = async () => {
-    const ok = await confirmReset();
-    if (!ok) return;
-
-    resetInviteCode({
-      param: { workspaceId: initialValues.$id },
-    });
-  };
-
-  const fullInviteLink =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`
-      : "";
-  const handleCopyInvite = () => {
-    navigator.clipboard
-      .writeText(fullInviteLink)
-      .then(() => toast.success("Invite link copied"));
   };
 
   return (
     <div className="flex flex-col gap-y-4">
       <DeleteDialog />
-      <ResetDialog />
       <Card className="size-full shadow-none border-none">
         <CardHeader className="flex p-7 flex-row items-center gap-x-4 space-y-0">
           <Button
@@ -138,7 +110,10 @@ export const UpdateWorkspaceForm = ({
             onClick={
               onCancel
                 ? onCancel
-                : () => router.push(`/workspaces/${initialValues.$id}`)
+                : () =>
+                    router.push(
+                      `/workspaces/${initialValues.workspaceId}/projects/${initialValues.$id}`
+                    )
             }
           >
             <ArrowLeftIcon className="size-4" />
@@ -160,9 +135,9 @@ export const UpdateWorkspaceForm = ({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Workspace Name</FormLabel>
+                      <FormLabel>Project Name</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="Enter workspace name" />
+                        <Input {...field} placeholder="Enter project name" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -196,7 +171,7 @@ export const UpdateWorkspaceForm = ({
                             </Avatar>
                           )}
                           <div className="flex flex-col">
-                            <p className="text-sm">Workspace Icon</p>
+                            <p className="text-sm">Project Icon</p>
                             <p className="text-sm text-muted-foreground">
                               JPG, JPEG, PNG, SVG, or GIF, max 1MB
                             </p>
@@ -254,8 +229,12 @@ export const UpdateWorkspaceForm = ({
                 >
                   Cancel
                 </Button>
-                <Button type="submit" size={"lg"} disabled={isPending}>
-                  Update Workspace
+                <Button
+                  type="submit"
+                  size={"lg"}
+                  disabled={isPending || isDeletingProject}
+                >
+                  Save Changes
                 </Button>
               </div>
             </form>
@@ -266,44 +245,10 @@ export const UpdateWorkspaceForm = ({
       <Card className="size-full shadow-none border-none">
         <CardContent className="p-7">
           <div className="flex flex-col">
-            <h3 className="font-bold">Invite Members</h3>
-            <p className="text-sm text-muted-foreground">
-              Use the invite link to add members to your workspace
-            </p>
-            <div className="mt-4">
-              <div className="flex items-center gap-x-2">
-                <Input disabled value={fullInviteLink} />
-                <Button
-                  onClick={handleCopyInvite}
-                  variant={"secondary"}
-                  className="size-12"
-                >
-                  <CopyIcon />
-                </Button>
-              </div>
-            </div>
-            <DottedSeparator className="py-7" />
-            <Button
-              className="mt-6 w-fit ml-auto"
-              size={"sm"}
-              variant={"destructive"}
-              type="button"
-              disabled={isPending || isResetingInviteCode}
-              onClick={handleReset}
-            >
-              Reset invite link
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="size-full shadow-none border-none">
-        <CardContent className="p-7">
-          <div className="flex flex-col">
             <h3 className="font-bold">Danger Zone</h3>
             <p className="text-sm text-muted-foreground">
-              Deleting a workspace is irreversible and will remove all
-              associated data.
+              Deleting a project is irreversible and will remove all associated
+              data.
             </p>
             <DottedSeparator className="py-7" />
             <Button
@@ -311,10 +256,10 @@ export const UpdateWorkspaceForm = ({
               size={"sm"}
               variant={"destructive"}
               type="button"
-              disabled={isPending || isDeletingWorkspace}
+              disabled={isPending || isDeletingProject}
               onClick={handleDelete}
             >
-              Delete Workspace
+              Delete Project
             </Button>
           </div>
         </CardContent>

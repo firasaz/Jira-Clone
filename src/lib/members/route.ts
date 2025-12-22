@@ -1,11 +1,16 @@
 import { Hono } from "hono";
-import { sessionMiddleware } from "../sessionMiddleware";
 import { zValidator } from "@hono/zod-validator";
-import z from "zod";
-import { createAdminClient } from "../appwrite";
-import { getMember } from "../workspaces/utils";
-import { DATABASE_ID, MEMBERS_ID } from "@/config";
 import { Query } from "node-appwrite";
+import z from "zod";
+
+import { DATABASE_ID, MEMBERS_ID } from "@/config";
+
+import { createAdminClient } from "@/lib/appwrite";
+import { sessionMiddleware } from "@/lib/sessionMiddleware";
+
+import { getMember } from "@/lib/workspaces/utils";
+
+import { Member } from "@/lib/members/types";
 
 const app = new Hono()
   .get(
@@ -25,9 +30,11 @@ const app = new Hono()
       });
       if (!member) return c.json({ error: "Unauthorized" }, 401);
 
-      const members = await databases.listDocuments(DATABASE_ID, MEMBERS_ID, [
-        Query.equal("workspaceId", workspaceId),
-      ]);
+      const members = await databases.listDocuments<Member>(
+        DATABASE_ID,
+        MEMBERS_ID,
+        [Query.equal("workspaceId", workspaceId)]
+      );
 
       // map over the Appwrite respone of members list and add "name" and "email" fields to each document in the list
       const populatedMembers = await Promise.all(

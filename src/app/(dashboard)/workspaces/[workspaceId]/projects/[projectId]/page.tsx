@@ -1,4 +1,5 @@
 import { ProjectsAvatar } from "@/components/projects/projects-avatar";
+import { TaskViewSwitcher } from "@/components/tasks/task-view-switcher";
 import { Button } from "@/components/ui/button";
 import { getCurrent } from "@/lib/auth/actions";
 import { getProject } from "@/lib/projects/queries";
@@ -41,6 +42,7 @@ const ProjectIdPage = async ({ params }: ProjectIdPageProps) => {
           </Button>
         </div>
       </div>
+      <TaskViewSwitcher />
     </div>
   );
 };

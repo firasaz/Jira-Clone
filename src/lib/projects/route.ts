@@ -34,10 +34,11 @@ const app = new Hono()
       });
       if (!member) return c.json({ error: "Unauthorized" }, 401);
 
-      const projects = await databases.listDocuments(DATABASE_ID, PROJECTS_ID, [
-        Query.equal("workspaceId", workspaceId),
-        Query.orderDesc("$createdAt"),
-      ]);
+      const projects = await databases.listDocuments<Project>(
+        DATABASE_ID,
+        PROJECTS_ID,
+        [Query.equal("workspaceId", workspaceId), Query.orderDesc("$createdAt")]
+      );
 
       return c.json({ data: projects });
     }
@@ -58,7 +59,7 @@ const app = new Hono()
         workspaceId,
         userId: user.$id,
       });
-      if (!member) return c.json({ error: "Unauthorized" }); // any member can create projects, but they need to be a member
+      if (!member) return c.json({ error: "Unauthorized" }, 401); // any member can create projects, but they need to be a member
 
       let uploadedImageUrl: string | undefined;
       if (image instanceof File) {
@@ -143,6 +144,28 @@ const app = new Hono()
 
       return c.json({ data: project });
     }
-  );
+  )
+  .delete("/:projectId", sessionMiddleware, async c => {
+    const databases = c.get("databases");
+    const user = c.get("user");
+
+    const { projectId } = c.req.param();
+    const existingProject = await databases.getDocument<Project>(
+      DATABASE_ID,
+      PROJECTS_ID,
+      projectId
+    );
+    const member = await getMember({
+      databases,
+      workspaceId: existingProject.workspaceId,
+      userId: user.$id,
+    });
+
+    if (!member) return c.json({ error: "Unauthroized" }, 401);
+
+    await databases.deleteDocument(DATABASE_ID, PROJECTS_ID, projectId); // delete document takes 3 params: appwrite db id, appwrite table id, & the document id to be deleted
+
+    return c.json({ data: { $id: projectId } }); // mimick the appwrite response structure by using "$id" inside the data key
+  });
 
 export default app;

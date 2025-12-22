@@ -15,7 +15,6 @@ const UpdateWorkspacePage = async ({ params }: UpdateWorkspaceFormProps) => {
   if (!user) redirect("/login");
 
   const initialValues = await getWorkspace({ workspaceId: params.workspaceId });
-  if (!initialValues) redirect(`/workspaces/${params.workspaceId}`);
   return (
     <div className="w-full lg:max-w-xl">
       <UpdateWorkspaceForm initialValues={initialValues} />
