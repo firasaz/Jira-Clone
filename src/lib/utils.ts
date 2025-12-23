@@ -18,3 +18,10 @@ export function generateInviteCode(length: number = 10) {
   }
   return result;
 }
+
+export function snakeCaseToTitleCase(str: string) {
+  return str
+    .toLowerCase()
+    .replaceAll(/_/g, " ") // replace "_" with a whitespace character
+    .replace(/\b\w/g, char => char.toUpperCase()); // capitalize the 1st character of every word
+}
