@@ -3,6 +3,7 @@ import { FolderIcon, ListChecksIcon, UserIcon } from "lucide-react";
 import { useGetMembers } from "@/hooks/members/use-get-members";
 import { useGetProjects } from "@/hooks/projects/use-get-projects";
 import { useWorkspaceId } from "@/hooks/workspaces/use-workspace-id";
+import { useTaskFilters } from "@/hooks/tasks/filter-hooks/use-task-filter";
 
 import { DatePicker } from "@/components/date-picker";
 import {
@@ -13,8 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+
 import { TaskStatus } from "@/lib/tasks/types";
-import { useTaskFilters } from "@/hooks/tasks/filter-hooks/use-task-filter";
 
 interface DataFiltersProps {
   hideProjectFilter?: boolean;
@@ -55,7 +57,15 @@ export const DataFilters = ({ hideProjectFilter }: DataFiltersProps) => {
     setFilters({ projectId: value === "all" ? null : (value as string) });
   };
 
-  if (isLoading) return null;
+  if (isLoading)
+    return (
+      <div className="flex flex-col lg:flex-row gap-2">
+        <Skeleton className="w-36 h-8" />
+        <Skeleton className="w-36 h-8" />
+        <Skeleton className="w-36 h-8" />
+        <Skeleton className="w-36 h-8" />
+      </div>
+    );
 
   return (
     <div className="flex flex-col lg:flex-row gap-2">
