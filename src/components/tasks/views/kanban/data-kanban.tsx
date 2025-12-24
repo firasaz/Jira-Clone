@@ -59,6 +59,7 @@ const KanbanColumnHeader = ({ board, taskCount }: KanbanColumnHeaderProps) => {
   const icon = statusIconMap[board];
   return (
     <div className="px-2 py-1.5 flex justify-between items-center">
+      {/* Task status and icon and task count per status */}
       <div className="flex items-center gap-x-2">
         {icon}
         <h2 className="text-sm font-medium">{snakeCaseToTitleCase(board)}</h2>
@@ -66,6 +67,7 @@ const KanbanColumnHeader = ({ board, taskCount }: KanbanColumnHeaderProps) => {
           {taskCount}
         </div>
       </div>
+      {/* Add task button */}
       <Button
         variant={"ghost"}
         size={"icon"}
