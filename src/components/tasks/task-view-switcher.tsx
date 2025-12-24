@@ -1,22 +1,25 @@
 "use client";
+import { useCallback } from "react";
 
 import { useQueryState } from "nuqs";
 import { Loader, PlusIcon } from "lucide-react";
 
+import { TaskStatus } from "@/lib/tasks/types";
+
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DottedSeparator } from "@/components/dotted-separator";
+import { columns } from "@/components/tasks/columns";
+import { DataTable } from "@/components/tasks/views/table/data-table";
+import { DataFilters } from "@/components/tasks/data-filters";
+import { DataKanban } from "@/components/tasks/views/kanban/data-kanban";
 
-import { useCreateTaskModal } from "@/hooks/tasks/use-create-task-modal";
 import { useGetTasks } from "@/hooks/tasks/use-get-tasks";
-import { useWorkspaceId } from "@/hooks/workspaces/use-workspace-id";
-import { DataFilters } from "./data-filters";
+import { useCreateTaskModal } from "@/hooks/tasks/use-create-task-modal";
 import { useTaskFilters } from "@/hooks/tasks/filter-hooks/use-task-filter";
-import { DataTable } from "./data-table";
-import { columns } from "./columns";
-import { DataKanban } from "./views/data-kanban";
-import { useCallback } from "react";
-import { TaskStatus } from "@/lib/tasks/types";
+
+import { useWorkspaceId } from "@/hooks/workspaces/use-workspace-id";
+import { useBulkUpdateTasks } from "@/hooks/tasks/use-bulk-update-tasks";
 
 export const TaskViewSwitcher = () => {
   const [view, setView] = useQueryState("task-view", {
@@ -36,9 +39,10 @@ export const TaskViewSwitcher = () => {
   });
   const { open } = useCreateTaskModal();
 
+  const { mutate: bulkUpdate } = useBulkUpdateTasks();
   const onKanbanChange = useCallback(
     (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
-      console.log({ tasks });
+      bulkUpdate({ json: { tasks } });
     },
     []
   );
