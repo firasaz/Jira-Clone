@@ -49,7 +49,7 @@ export const TaskViewSwitcher = () => {
   );
   return (
     <Tabs
-      className="flex-1 w-full border rounded-lg"
+      className="flex-1 w-full border rounded-lg overflow-y-auto"
       defaultValue={view}
       onValueChange={setView}
     >
@@ -79,22 +79,22 @@ export const TaskViewSwitcher = () => {
         <DataFilters />
         <DottedSeparator className="my-4" />
         {isLoadingTasks ? (
-          <div className="flex flex-col justify-center items-center w-full border rounded-lg h-[200px]">
+          <div className="flex flex-col justify-center items-center w-full border rounded-lg h-full">
             <Loader className="size-5 animate-spin text-muted-foreground" />
           </div>
         ) : (
           <>
-            <TabsContent value="table" className="mt-0">
+            <TabsContent value="table" className="mt-0 h-full overflow-y-auto">
               {/* {JSON.stringify(tasks)} */}
               <DataTable columns={columns} data={tasks?.documents ?? []} />
             </TabsContent>
-            <TabsContent value="kanban" className="mt-0">
+            <TabsContent value="kanban" className="mt-0 h-full overflow-y-auto">
               <DataKanban
                 data={tasks?.documents ?? []}
                 onChange={onKanbanChange}
               />
             </TabsContent>
-            <TabsContent value="calendar" className="mt-0">
+            <TabsContent value="calendar" className="mt-0 h-full">
               <DataCalendar data={tasks?.documents ?? []} />
             </TabsContent>
           </>

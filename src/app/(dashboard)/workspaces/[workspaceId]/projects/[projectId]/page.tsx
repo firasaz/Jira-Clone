@@ -21,7 +21,7 @@ const ProjectIdPage = async ({ params }: ProjectIdPageProps) => {
   if (!initialValues) throw new Error("Project not found");
 
   return (
-    <div className="flex flex-col gap-y-4">
+    <div className="flex flex-col gap-y-4 h-full">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-x-2">
           <ProjectsAvatar

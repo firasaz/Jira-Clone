@@ -9,6 +9,7 @@ import {
 } from "date-fns";
 import { enUS } from "date-fns/locale";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { Task } from "@/lib/tasks/types";
 
@@ -40,5 +41,27 @@ export const DataCalendar = ({ data }: DataCalendarProps) => {
     id: task.$id,
   }));
 
-  return <div>Data calendar!</div>;
+  const handleNavigate = (action: "PREV" | "NEXT" | "TODAY") => {
+    if (action === "PREV") setValue(subMonths(value, 1));
+    else if (action === "NEXT") setValue(addMonths(value, 1));
+    else if (action === "TODAY") setValue(new Date());
+  };
+
+  return (
+    <Calendar
+      localizer={localizer}
+      date={value}
+      events={events}
+      views={["month"]}
+      defaultView="month"
+      toolbar
+      showAllEvents
+      max={new Date(new Date().setFullYear(new Date().getFullYear() + 1))}
+      formats={{
+        weekdayFormat: (date, culture, localizer) =>
+          localizer?.format(date, "EEE", culture) ?? "",
+      }}
+      className="h-full"
+    />
+  );
 };
