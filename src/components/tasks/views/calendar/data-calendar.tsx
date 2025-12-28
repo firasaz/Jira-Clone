@@ -10,8 +10,11 @@ import {
 import { enUS } from "date-fns/locale";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import "@/components/tasks/views/calendar/data-calendar.css";
 
 import { Task } from "@/lib/tasks/types";
+import { EventCard } from "./event-card";
+import { CustomToolbar } from "./custom-toolbar";
 
 const locales = {
   "en-US": enUS,
@@ -62,6 +65,12 @@ export const DataCalendar = ({ data }: DataCalendarProps) => {
           localizer?.format(date, "EEE", culture) ?? "",
       }}
       className="h-full"
+      components={{
+        eventWrapper: ({ event }) => <EventCard event={event} />,
+        toolbar: () => (
+          <CustomToolbar date={value} onNavigate={handleNavigate} />
+        ),
+      }}
     />
   );
 };
