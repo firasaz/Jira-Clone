@@ -20,6 +20,8 @@ import { useCreateTaskModal } from "@/hooks/tasks/use-create-task-modal";
 import { useTaskFilters } from "@/hooks/tasks/filter-hooks/use-task-filter";
 
 import { useWorkspaceId } from "@/hooks/workspaces/use-workspace-id";
+import { useProjectId } from "@/hooks/projects/use-project-id";
+
 import { useBulkUpdateTasks } from "@/hooks/tasks/use-bulk-update-tasks";
 
 export const TaskViewSwitcher = () => {
@@ -29,10 +31,11 @@ export const TaskViewSwitcher = () => {
   const [{ projectId, assigneeId, search, dueDate, status }] = useTaskFilters();
 
   const workspaceId = useWorkspaceId();
+  const paramProjectId = useProjectId();
 
   const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({
     workspaceId,
-    projectId,
+    projectId: paramProjectId || projectId,
     assigneeId,
     search,
     dueDate,
@@ -75,9 +78,9 @@ export const TaskViewSwitcher = () => {
             New
           </Button>
         </div>
-        <DottedSeparator className="my-4" />
+        <DottedSeparator className="my-2 lg:my-4" />
         <DataFilters />
-        <DottedSeparator className="my-4" />
+        <DottedSeparator className="my-2 lg:my-4" />
         {isLoadingTasks ? (
           <div className="flex flex-col justify-center items-center w-full border rounded-lg h-full">
             <Loader className="size-5 animate-spin text-muted-foreground" />

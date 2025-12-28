@@ -62,7 +62,7 @@ export const DataTable = <TData, TValue>({
           onChange={event =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm h-10 lg:h-12 focus:outline-none"
         />
       </div>
       <div className="rounded-md border">
