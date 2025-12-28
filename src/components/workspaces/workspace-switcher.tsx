@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
+import { Loader } from "lucide-react";
 import { RiAddCircleFill } from "react-icons/ri";
 
 import { useGetWorkspaces } from "@/hooks/workspaces/use-get-workspaces";
@@ -16,8 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { WorkspaceAvatar } from "@/components/workspaces/workspace-avatar";
-import { Skeleton } from "../ui/skeleton";
-import { Loader, Loader2Icon } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const WorkspaceSwitcherSkeleton = () => {
   return (

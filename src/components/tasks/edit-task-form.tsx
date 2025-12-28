@@ -1,16 +1,13 @@
 "use client";
 
+import React from "react";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import React, { useRef } from "react";
-
-import { useRouter } from "next/navigation";
 
 import { createTaskSchema } from "@/lib/tasks/schema";
 
 import { useUpdateTask } from "@/hooks/tasks/use-update-task";
-import { useWorkspaceId } from "@/hooks/workspaces/use-workspace-id";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -49,11 +46,8 @@ export const EditTaskForm = ({
   memberOptions,
   initialValues,
 }: EditTaskFormProps) => {
-  const router = useRouter();
-
-  const workspaceId = useWorkspaceId();
   const { mutate, isPending } = useUpdateTask();
-  const inputRef = useRef<HTMLInputElement>(null);
+  // const inputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof createTaskSchema>>({
     resolver: zodResolver(

@@ -3,16 +3,13 @@
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import React, { useRef } from "react";
-
-import { useRouter } from "next/navigation";
+import React from "react";
 
 import { createTaskSchema } from "@/lib/tasks/schema";
 
 import { useCreateTask } from "@/hooks/tasks/use-create-tasks";
 import { useWorkspaceId } from "@/hooks/workspaces/use-workspace-id";
 
-import { ImageIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
@@ -25,19 +22,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DottedSeparator } from "@/components/dotted-separator";
-import Image from "next/image";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { DatePicker } from "../date-picker";
+
+import { DatePicker } from "@/components/date-picker";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
 import { MemberAvatar } from "../members/members-avatar";
 import { TaskStatus } from "@/lib/tasks/types";
-import { ProjectsAvatar } from "../projects/projects-avatar";
+import { ProjectsAvatar } from "@/components/projects/projects-avatar";
 
 interface CreateTaskFormProps {
   onCancel?: () => void;
@@ -52,11 +48,9 @@ export const CreateTaskForm = ({
   memberOptions,
   initialTaskStatus,
 }: CreateTaskFormProps) => {
-  const router = useRouter();
-
   const workspaceId = useWorkspaceId();
   const { mutate, isPending } = useCreateTask();
-  const inputRef = useRef<HTMLInputElement>(null);
+  // const inputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof createTaskSchema>>({
     resolver: zodResolver(createTaskSchema.omit({ workspaceId: true })),

@@ -3,11 +3,10 @@ import { Loader } from "lucide-react";
 import { useGetMembers } from "@/hooks/members/use-get-members";
 import { useGetProjects } from "@/hooks/projects/use-get-projects";
 import { useWorkspaceId } from "@/hooks/workspaces/use-workspace-id";
+import { useGetTask } from "@/hooks/tasks/use-get-task";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { CreateTaskForm } from "@/components/tasks/create-task-form";
-import { useGetTask } from "@/hooks/tasks/use-get-task";
-import { EditTaskForm } from "./edit-task-form";
+import { EditTaskForm } from "@/components/tasks/edit-task-form";
 
 interface EditTaskFormWrapperProps {
   onCancel: () => void;
