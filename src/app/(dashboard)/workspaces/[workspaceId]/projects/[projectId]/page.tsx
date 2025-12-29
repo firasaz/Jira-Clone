@@ -1,11 +1,15 @@
-import { ProjectsAvatar } from "@/components/projects/projects-avatar";
-import { TaskViewSwitcher } from "@/components/tasks/task-view-switcher";
-import { Button } from "@/components/ui/button";
-import { getCurrent } from "@/lib/auth/actions";
-import { getProject } from "@/lib/projects/queries";
-import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+import { PencilIcon } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+
+import { ProjectsAvatar } from "@/components/projects/projects-avatar";
+import { TaskViewSwitcher } from "@/components/tasks/task-view-switcher";
+
+import { getCurrent } from "@/lib/auth/actions";
+import { getProject } from "@/lib/projects/queries";
 
 interface ProjectIdPageProps {
   params: { projectId: string };
