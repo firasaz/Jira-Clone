@@ -23,8 +23,14 @@ import { useWorkspaceId } from "@/hooks/workspaces/use-workspace-id";
 import { useProjectId } from "@/hooks/projects/use-project-id";
 
 import { useBulkUpdateTasks } from "@/hooks/tasks/use-bulk-update-tasks";
+import { PageLoader } from "../layout/page-loader";
 
-export const TaskViewSwitcher = () => {
+interface TaskViewSwitcherProps {
+  hideProjectFilter?: boolean;
+}
+export const TaskViewSwitcher = ({
+  hideProjectFilter,
+}: TaskViewSwitcherProps) => {
   const [view, setView] = useQueryState("task-view", {
     defaultValue: "table",
   });
@@ -79,12 +85,10 @@ export const TaskViewSwitcher = () => {
           </Button>
         </div>
         <DottedSeparator className="my-2 lg:my-4" />
-        <DataFilters />
+        <DataFilters hideProjectFilter={hideProjectFilter} />
         <DottedSeparator className="my-2 lg:my-4" />
         {isLoadingTasks ? (
-          <div className="flex flex-col justify-center items-center w-full border rounded-lg h-full">
-            <Loader className="size-5 animate-spin text-muted-foreground" />
-          </div>
+          <PageLoader className="border rounded-lg" loaderClassName="size-5" />
         ) : (
           <>
             <TabsContent value="table" className="mt-0 h-full overflow-y-auto">
