@@ -1,10 +1,19 @@
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { ChevronRightIcon, TrashIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
 import { Project } from "@/lib/projects/types";
 import { Task } from "@/lib/tasks/types";
-import { ProjectsAvatar } from "../projects/projects-avatar";
-import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { ProjectsAvatar } from "@/components/projects/projects-avatar";
+
 import { useWorkspaceId } from "@/hooks/workspaces/use-workspace-id";
-import { ChevronRightIcon, TrashIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { useDeleteTask } from "@/hooks/tasks/use-delete-task";
+import { useConfirm } from "@/hooks/workspaces/use-confirm";
 
 interface TaskBreadCrumbsProps {
   project: Project;
@@ -12,9 +21,34 @@ interface TaskBreadCrumbsProps {
 }
 
 export const TaskBreadcrumbs = ({ project, task }: TaskBreadCrumbsProps) => {
+  const router = useRouter();
   const workspaceId = useWorkspaceId();
+
+  const { mutate, isPending } = useDeleteTask();
+
+  const [ConfrimDialog, confirm] = useConfirm(
+    "Delete task",
+    "This action cannot be undone",
+    "destructive"
+  );
+  const handleDeleteTask = async () => {
+    const ok = await confirm();
+    if (!ok) return;
+
+    mutate(
+      {
+        param: { taskId: task.$id },
+      },
+      {
+        onSuccess: () => {
+          router.push(`/workspaces/${workspaceId}/tasks`);
+        },
+      }
+    );
+  };
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-3">
+      <ConfrimDialog />
       <ProjectsAvatar
         name={project.name}
         image={project.imageUrl}
@@ -28,9 +62,14 @@ export const TaskBreadcrumbs = ({ project, task }: TaskBreadCrumbsProps) => {
       <ChevronRightIcon className="lg:size-5 text-muted-foreground" />
       <p className="text-sm lg:text-lg font-semibold">{task.name}</p>
       <Button
-        className="ml-auto basis-full sm:basis-auto"
+        className={cn(
+          "ml-auto basis-full sm:basis-auto",
+          isPending && "animate-pulse"
+        )}
         variant={"destructive"}
         size={"sm"}
+        onClick={handleDeleteTask}
+        disabled={isPending}
       >
         <TrashIcon className="lg:mr-2" />
         <span className="hidden lg:block">Delete task</span>
