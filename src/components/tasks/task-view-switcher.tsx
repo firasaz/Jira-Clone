@@ -2,7 +2,7 @@
 import { useCallback } from "react";
 
 import { useQueryState } from "nuqs";
-import { Loader, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 
 import { TaskStatus } from "@/lib/tasks/types";
 
