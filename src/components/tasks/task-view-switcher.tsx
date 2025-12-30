@@ -101,7 +101,10 @@ export const TaskViewSwitcher = ({
                 onChange={onKanbanChange}
               />
             </TabsContent>
-            <TabsContent value="calendar" className="mt-0 h-full">
+            <TabsContent
+              value="calendar"
+              className="mt-0 h-full overflow-y-auto"
+            >
               <DataCalendar data={tasks?.documents ?? []} />
             </TabsContent>
           </>

@@ -122,7 +122,7 @@ export const DataFilters = ({ hideProjectFilter }: DataFiltersProps) => {
         <Skeleton className="w-36 h-8 flex-shrink-0" />
         <Skeleton className="w-36 h-8 flex-shrink-0" />
         <Skeleton className="w-36 h-8 flex-shrink-0" />
-        <Skeleton className="w-36 h-8 flex-shrink-0" />
+        {!hideProjectFilter && <Skeleton className="w-36 h-8 flex-shrink-0" />}
       </div>
     );
 

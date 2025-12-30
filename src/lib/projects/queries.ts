@@ -37,3 +37,10 @@ export const getProject = async ({ projectId }: GetProjectProps) => {
 
   return project;
 };
+
+// interface GetProjectAnalyticsProps {
+//   projectId: string;
+// }
+// export const getProjectAnalytics = async ({ projectId }: GetProjectAnalyticsProps) => {
+
+// }
