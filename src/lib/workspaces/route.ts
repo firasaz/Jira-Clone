@@ -21,6 +21,7 @@ import {
   MEMBERS_ID,
   WORKSPACES_ID,
 } from "@/config";
+import { getWorkspaceAnalytics } from "./actions";
 
 const app = new Hono()
   .get("/", sessionMiddleware, async c => {
@@ -220,6 +221,12 @@ const app = new Hono()
 
       return c.json({ data: workspace });
     }
-  );
+  )
+  .get("/:workspaceId/analytics", async c => {
+    const { workspaceId } = c.req.param();
+    const analyticsData = await getWorkspaceAnalytics({ workspaceId });
+
+    return c.json(analyticsData);
+  });
 
 export default app;
