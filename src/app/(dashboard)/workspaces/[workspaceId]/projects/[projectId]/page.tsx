@@ -9,7 +9,8 @@ import { ProjectsAvatar } from "@/components/projects/projects-avatar";
 import { TaskViewSwitcher } from "@/components/tasks/task-view-switcher";
 
 import { getCurrent } from "@/lib/auth/actions";
-import { getProject } from "@/lib/projects/queries";
+import { getProject, getProjectAnalytics } from "@/lib/projects/queries";
+import { Analytics } from "@/components/analytics";
 
 interface ProjectIdPageProps {
   params: { projectId: string };
@@ -23,6 +24,8 @@ const ProjectIdPage = async ({ params }: ProjectIdPageProps) => {
     projectId: params.projectId,
   });
   if (!initialValues) throw new Error("Project not found");
+
+  const { data } = await getProjectAnalytics({ projectId: params.projectId });
 
   return (
     <div className="flex flex-col gap-y-4 h-full">
@@ -46,6 +49,7 @@ const ProjectIdPage = async ({ params }: ProjectIdPageProps) => {
           </Button>
         </div>
       </div>
+      <Analytics data={data} />
       <TaskViewSwitcher hideProjectFilter={true} />
     </div>
   );
