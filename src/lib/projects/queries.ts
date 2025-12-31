@@ -7,6 +7,29 @@ import { Query } from "node-appwrite";
 import { Task, TaskStatus } from "../tasks/types";
 import { endOfMonth, startOfMonth, subMonths } from "date-fns";
 
+interface GetProjectsProps {
+  workspaceId: string;
+}
+export const getProjects = async ({ workspaceId }: GetProjectsProps) => {
+  const { account, databases } = await createSessionClient();
+
+  const user = await account.get();
+  const member = await getMember({
+    databases,
+    workspaceId,
+    userId: user.$id,
+  });
+  if (!member) throw new Error("Unauthorized");
+
+  const projects = await databases.listDocuments<Project>(
+    DATABASE_ID,
+    PROJECTS_ID,
+    [Query.equal("workspaceId", workspaceId), Query.orderDesc("$createdAt")]
+  );
+
+  return projects;
+};
+
 interface GetProjectProps {
   projectId: string;
 }

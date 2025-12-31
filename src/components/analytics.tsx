@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import { ProjectAnalyticsResponseType } from "@/hooks/projects/use-get-project-analytics";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
