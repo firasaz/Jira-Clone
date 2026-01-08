@@ -46,7 +46,10 @@ const WorkspaceIdPage = async ({
   return (
     <div className="overflow-y-auto overflow-x-hidden h-full flex flex-col space-y-4">
       <Analytics data={workspaceAnalytics} />
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 flex-1 overflow-hidden min-h-0">
+      <div
+        className="grid grid-cols-1 xl:grid-cols-2 gap-4 flex-1 overflow-y-auto"
+        style={{ scrollbarWidth: "thin" }}
+      >
         <TaskList
           tasks={workspaceTasks.documents}
           total={workspaceTasks.total}

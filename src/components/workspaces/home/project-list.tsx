@@ -33,7 +33,7 @@ export const ProjectList = ({ projects, total }: ProjectListProps) => {
             <PlusIcon className="size-4 text-neutral" />
           </Button>
         </div>
-        <DottedSeparator className="my-4" />
+        <DottedSeparator className="my-2 lg:my-4" />
         <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-y-auto">
           {projects.map(project => (
             <li key={project.$id}>
@@ -58,9 +58,9 @@ export const ProjectList = ({ projects, total }: ProjectListProps) => {
             No projects found
           </li>
         </ul>
-        <Button variant={"muted"} className="mt-4 w-full">
+        {/* <Button variant={"muted"} className="mt-4 w-full">
           <Link href={`/workspaces/${workspaceId}/tasks`}>Show All</Link>
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

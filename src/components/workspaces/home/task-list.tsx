@@ -18,7 +18,7 @@ export const TaskList = ({ tasks, total }: TaskListProps) => {
   const workspaceId = useWorkspaceId();
   const { open: createTask } = useCreateTaskModal();
   return (
-    <div className="flex flex-col gap-y-4 col-span-1 min-h-0">
+    <div className="flex flex-col gap-y-4 col-span-1">
       <div className=" flex flex-col h-full bg-muted rounded-lg p-4">
         <div className="flex justify-between items-center">
           <p className="text-lg font-semibold">Tasks {total}</p>
@@ -26,8 +26,11 @@ export const TaskList = ({ tasks, total }: TaskListProps) => {
             <PlusIcon className="size-4 text-neutral" />
           </Button>
         </div>
-        <DottedSeparator className="my-4" />
-        <ul className="flex flex-col gap-y-4 overflow-y-auto">
+        <DottedSeparator className="my-2 lg:my-4" />
+        <ul
+          className="flex flex-col gap-y-4 max-h-80 overflow-y-auto"
+          style={{ scrollbarWidth: "none" }}
+        >
           {tasks.map(task => (
             <li key={task.$id}>
               <Link href={`/workspaces/${workspaceId}/tasks/${task.$id}`}>
