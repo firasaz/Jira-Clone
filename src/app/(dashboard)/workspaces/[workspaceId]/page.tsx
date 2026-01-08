@@ -4,10 +4,7 @@ import { getCurrent } from "@/lib/auth/actions";
 import { getWorkspaceAnalytics } from "@/lib/workspaces/actions";
 import { getTasks } from "@/lib/tasks/query";
 import { getMembers } from "@/lib/members/queries";
-import { getProject, getProjects } from "@/lib/projects/queries";
-
-import { useCreateProjectModal } from "@/hooks/projects/use-create-project-modal";
-import { useCreateTaskModal } from "@/hooks/tasks/use-create-task-modal";
+import { getProjects } from "@/lib/projects/queries";
 
 import { PageError } from "@/components/layout/page-error";
 import { Analytics } from "@/components/analytics";
