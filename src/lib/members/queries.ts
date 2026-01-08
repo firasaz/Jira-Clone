@@ -3,12 +3,14 @@ import { createAdminClient, createSessionClient } from "../appwrite";
 import { getMember } from "../workspaces/utils";
 import { Member } from "./types";
 import { Query } from "node-appwrite";
+// import { getCurrent } from "../auth/actions";
 
 interface GetMembersProps {
   workspaceId: string;
 }
 export const getMembers = async ({ workspaceId }: GetMembersProps) => {
-  const { account, databases, users } = await createAdminClient();
+  const { users } = await createAdminClient();
+  const { account, databases } = await createSessionClient();
 
   const user = await account.get();
   const member = await getMember({

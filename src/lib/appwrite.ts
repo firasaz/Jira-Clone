@@ -58,8 +58,7 @@ export const createAdminClient = async () => {
 
   const account = new Account(client);
   const users = new Users(client);
-  const databases = new Databases(client);
-  return { account, users, databases };
+  return { account, users };
   // return {
   //   get account() {
   //     return new Account(client);
