@@ -10,6 +10,8 @@ import { FaGithub } from "react-icons/fa";
 import { loginSchema } from "@/lib/auth/schemas";
 import { useLogin } from "@/hooks/auth/use-login";
 
+import { signUpWithGithub, signUpWithGoogle } from "@/lib/auth/oauth";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Input } from "@/components/ui/input";
@@ -89,6 +91,7 @@ export const LoginCard = () => {
         <DottedSeparator />
         <CardContent className="flex flex-col gap-y-4 p-7">
           <Button
+            onClick={() => signUpWithGoogle()}
             disabled={isPending}
             size={"lg"}
             variant={"secondary"}
@@ -98,6 +101,7 @@ export const LoginCard = () => {
             Login with Google
           </Button>
           <Button
+            onClick={() => signUpWithGithub()}
             disabled={isPending}
             size={"lg"}
             variant={"secondary"}
