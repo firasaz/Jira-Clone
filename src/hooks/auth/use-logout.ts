@@ -21,9 +21,10 @@ export const useLogout = () => {
     },
     // refetch the client data to clear the session data in the frontend
     onSuccess: () => {
+      toast.success("Logged out");
+
       router.refresh();
-      queryClient.invalidateQueries({ queryKey: ["current"] });
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+      queryClient.invalidateQueries();
     },
     onError: () => {
       toast.error("Failed to logout");
